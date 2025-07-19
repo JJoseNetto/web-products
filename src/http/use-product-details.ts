@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import type { GetProductResponse } from "./types/get-product-response";
 
 export function useProductDetails(productId?: string) {
   return useQuery({
@@ -6,7 +7,9 @@ export function useProductDetails(productId?: string) {
     queryFn: async () => {
       const response = await fetch(`http://localhost:3333/products/${productId}`);
       if (!response.ok) throw new Error('Produto não encontrado');
-      return response.json() as Promise<Array<{ name: string; price: string }>>;
+      const result: GetProductResponse = await response.json();
+
+      return result;
     },
     enabled: !!productId,
   });
